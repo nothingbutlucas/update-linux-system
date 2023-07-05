@@ -126,7 +126,7 @@ function start_script() {
 }
 
 function verify_root() {
-	root_or_not=y
+	noot_or_not=n
 	if [[ $root_or_not == "y" ]]; then
 		if [[ $(id -u) -ne 0 ]]; then
 			echo -e "${sign_wrong} ${text_need_root}" 1>&2
@@ -210,6 +210,7 @@ function main() {
 			echo -e "\n${sign_good} ${manager} -> ${manager_absolute_path}"
 			echo -e "${sign_doing} ${text_update00} ${manager}"
 			echo ""
+			tput cnorm
 			if [[ $manager == "pacman" ]]; then
 				if [[ $quiet == false ]]; then
 					sudo "${manager_absolute_path}"-Syu
@@ -218,11 +219,12 @@ function main() {
 				fi
 			else
 				if [[ $quiet == false ]]; then
-					sudo "${manager_absolute_path}" update -y
+					sudo "${manager_absolute_path}" update -y && sudo "${manager_absolute_path}" upgrade -y
 				else
-					sudo "${manager_absolute_path}" update -y &>/dev/null
+					sudo "${manager_absolute_path}" update -y &>/dev/null && sudo "${manager_absolute_path}" upgrade -y &>/dev/null
 				fi
 			fi
+			tput civis
 		else
 			echo_verbose -e "${sign_warn} ${manager} ${text_not_installed}"
 		fi
